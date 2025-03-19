@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { toast } from "@/components/ui/use-toast";
 
 export function PlantShop() {
   const [plants, setPlants] = useState(plantData)
@@ -21,6 +22,7 @@ export function PlantShop() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
   const [activeCategory, setActiveCategory] = useState("all")
+  const [cartUpdated, setCartUpdated] = useState(false);
 
   // Get unique plant categories
   const getPlantCategories = () => {
@@ -148,19 +150,31 @@ export function PlantShop() {
     setFilteredPlants(result)
   }, [plants, searchQuery, filterType, sortBy, activeCategory])
 
-  // Add plant to cart
   const addToCart = (plant) => {
-    if (plant.availability === 0) return
-
-    const existingItem = cart.find((item) => item.id === plant.id)
-
+    if (plant.availability === 0) return;
+  
+    const existingItem = cart.find((item) => item.id === plant.id);
+  
     if (existingItem) {
-      setCart(cart.map((item) => (item.id === plant.id ? { ...item, quantity: item.quantity + 1 } : item)))
+      setCart(cart.map((item) => (item.id === plant.id ? { ...item, quantity: item.quantity + 1 } : item)));
     } else {
-      setCart([...cart, { ...plant, quantity: 1 }])
+      setCart([...cart, { ...plant, quantity: 1 }]);
     }
-  }
-
+  
+    // ✅ Fix: Set cart updated state
+    setCartUpdated(true);
+  
+    // ✅ Show a toast notification
+    toast({
+      title: "Item Added",
+      description: `${plant.commonName} has been added to your cart.`,
+      status: "success",
+    });
+  
+    // Reset cart updated state after a short delay
+    setTimeout(() => setCartUpdated(false), 2000);
+  };
+  
   // Remove plant from cart
   const removeFromCart = (plantId) => {
     setCart(cart.filter((item) => item.id !== plantId))
