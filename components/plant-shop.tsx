@@ -204,12 +204,46 @@ export function PlantShop() {
     ),
   ]
 
-  // Handle checkout
   const handleCheckout = () => {
-    setIsCartOpen(false)
-    setIsCheckoutOpen(true)
-  }
-
+    if (cart.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+  
+    const recipientEmail = "orders@earthpeoplelandcare.com"; // Change to your business email
+    const subject = encodeURIComponent("New Order Inquiry from Earth People LandCare");
+  
+    // Format cart items into a readable list
+    const orderDetails = cart
+      .map((item) => `• ${item.quantity}x ${item.commonName} - $${item.retailPrice.toFixed(2)}`)
+      .join("%0A"); // `%0A` is a new line in `mailto:`
+  
+    // Calculate total price
+    const totalPrice = cart.reduce((sum, item) => sum + item.retailPrice * item.quantity, 0).toFixed(2);
+  
+    // Default message for inquiry
+    const message = `
+  Hello,
+  
+  I would like to inquire about placing an order for the following plants:
+  
+  ${orderDetails}
+  
+  Total Estimated Cost: $${totalPrice}
+  
+  Please confirm availability and provide further details.
+  
+  Best regards,
+  [Your Name]
+  `;
+  
+    // Generate mailto link
+    const mailtoLink = `mailto:${recipientEmail}?subject=${subject}&body=${encodeURIComponent(message)}`;
+  
+    // Open default email client
+    window.location.href = mailtoLink;
+  };
+  
   // Handle form submission
   const handleFormSubmit = (formData) => {
     // In a real app, this would send the data to a server
