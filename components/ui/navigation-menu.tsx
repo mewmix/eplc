@@ -24,7 +24,6 @@ export function NavigationMenu() {
         
         {/* 🏡 Logo */}
         <Link href="/" className="text-green-800 font-bold text-xl">
-          Earth People LandCare
         </Link>
 
         {/* 🖥️ Desktop Navigation */}
