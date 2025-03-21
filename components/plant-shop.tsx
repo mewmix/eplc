@@ -337,10 +337,15 @@ export function PlantShop() {
             </Select>
           </div>
 
-          <Button variant="outline" className="flex items-center gap-2 ml-auto" onClick={() => setIsCartOpen(true)}>
-            <ShoppingCart size={18} />
-            <span>Cart ({totalItems})</span>
-          </Button>
+          <Button variant="outline" className="flex items-center gap-2 ml-auto relative" onClick={() => setIsCartOpen(true)}>
+  <ShoppingCart size={18} />
+  {totalItems > 0 && (
+    <span className="absolute -top-2 -right-2 bg-green-700 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+      {totalItems}
+    </span>
+  )}
+  <span>Cart</span>
+</Button>
         </div>
       </div>
 
