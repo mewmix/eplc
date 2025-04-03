@@ -1,0 +1,94 @@
+# Filename: public/admin/config.yml
+
+# Backend connects Netlify Identity & Git Gateway to your repo
+backend:
+  name: git-gateway # Use Netlify's Git Gateway for authentication
+  branch: main # Or your default branch (e.g., master)
+  # Optional: Customize commit messages
+  # commit_messages:
+  #   create: 'CMS: Create {{collection}} “{{slug}}”'
+  #   update: 'CMS: Update {{collection}} “{{slug}}” - {{message}}'
+  #   delete: 'CMS: Delete {{collection}} “{{slug}}”'
+  #   uploadMedia: 'CMS: Upload “{{path}}”'
+  #   deleteMedia: 'CMS: Delete “{{path}}”'
+
+# Media files (like images) - Optional if you only use external URLs/placeholders
+media_folder: "public/uploads/images" # Where uploaded images are stored in the repo
+public_folder: "/uploads/images"     # How images are accessed from the site URL
+
+# Define collections (your data types)
+collections:
+  # Collection for editing the single plant inventory file
+  - name: "plant_inventory" # Internal name for the collection
+    label: "Plant Inventory" # Display name in the CMS UI
+    description: "Manage all plant listings. Remember retail price is calculated automatically (Base Price x 1.75)."
+    files: # Indicates we are editing specific files, not a folder of files
+      - label: "All Plants" # Label for this specific file entry in the UI
+        name: "plants"      # Internal name for this file entry
+        file: "/public/plant-data.json" # Path **from the repo root** to the JSON file
+        # Specify that this file contains a list/array of items
+        widget: list
+        fields: # Fields for **each object** within the JSON list
+          - label: "ID"
+            name: "id"
+            widget: "string"
+            hint: "Unique identifier (e.g., 'apple-fuji'). Should generally not be changed after creation."
+            # You could make it read-only after creation if needed, but editing might be useful initially.
+            # pattern: ['^[a-z0-9-]+$', "Only lowercase letters, numbers, and hyphens allowed"]
+
+          - label: "Display Name"
+            name: "displayName"
+            widget: "string"
+            hint: "Full name shown in catalog (e.g., Apple 'Fuji' 10/15 gal)"
+
+          - label: "Common Name"
+            name: "commonName"
+            widget: "string"
+            hint: "Simpler name (e.g., Fuji Apple)"
+
+          - label: "Botanical Name"
+            name: "botanicalName"
+            widget: "string"
+            required: false # Mark as optional if some plants might not have it
+
+          - label: "Container Size"
+            name: "containerSize"
+            widget: "string"
+            hint: "e.g., 5 gallon, 10/15 gallon, 24inch/25gallon"
+
+          - label: "Base Price ($)"
+            name: "basePrice"
+            widget: "number"
+            value_type: "float" # Allow decimals
+            min: 0
+            hint: "Wholesale/cost price. Retail price is calculated automatically (base x 1.75)."
+
+          - label: "Available Quantity"
+            name: "available"
+            widget: "number"
+            value_type: "int" # Whole numbers only
+            default: 0
+            min: 0
+            hint: "Current stock level."
+
+          - label: "Image Path / URL"
+            name: "image"
+            widget: "string" # Use 'image' widget if you want CMS upload/selection
+            required: false
+            hint: "URL or path like /placeholder.svg?..."
+            # If you want CMS image uploads later, change widget to 'image'
+            # widget: "image"
+            # media_folder: "" # Optional: Can override global media_folder per field
+            # public_folder: "" # Optional: Can override global public_folder per field
+
+# Optional: Settings collection example (if you want to manage other site settings via CMS)
+# - name: "settings"
+#   label: "Site Settings"
+#   files:
+#     - label: "General Settings"
+#       name: "general"
+#       file: "/data/settings.json" # Example path - create this file if you use it
+#       fields:
+#         - { label: "Site Title", name: "title", widget: "string" }
+#         - { label: "Contact Email", name: "email", widget: "string" }
+#         - { label: "Pricing Multiplier", name: "pricingMultiplier", widget: "number", value_type: "float", default: 1.75 }

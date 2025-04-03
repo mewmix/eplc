@@ -1,561 +1,623 @@
 [
   {
-    "id": 1,
+    "id": "1",
     "botanicalName": "Almond 'All in One'",
     "commonName": "All in One Almond",
     "containerSize": "10/15 gallon",
     "basePrice": 72.99,
-    
-    "availability": 1
+    "availability": 1,
+    "displayName": "Almond 'All in One'"
   },
   {
-    "id": 2,
+    "id": "2",
     "botanicalName": "Apple 'Fuji'",
     "commonName": "Fuji Apple",
     "containerSize": "10/15 gallon",
     "basePrice": 72.99,
-    
-    "availability": 1
+    "availability": 1,
+    "displayName": "Apple 'Fuji'"
   },
   {
-    "id": 3,
+    "id": "3",
     "botanicalName": "Blueberry 'Emerald' Southern Highbush Mid season",
     "commonName": "Emerald Blueberry",
     "containerSize": "2 gallon",
     "basePrice": 24.75,
-    "availability": 1
+    "availability": 1,
+    "displayName": "Blueberry 'Emerald' Southern Highbush Mid season"
   },
   {
-    "id": 4,
+    "id": "4",
     "botanicalName": "Cherry Sweet 'Lapins'",
     "commonName": "Lapins Sweet Cherry",
     "containerSize": "15 gallon",
     "basePrice": 72.99,
-    
-    "availability": 1
+    "availability": 1,
+    "displayName": "Cherry Sweet 'Lapins'"
   },
   {
-    "id": 5,
+    "id": "5",
     "botanicalName": "Dragon Fruit (White)",
     "commonName": "White Dragon Fruit, Pitaya",
     "containerSize": "5 gallon",
     "basePrice": 26.99,
-    "availability": 7  },
+    "availability": 7,
+    "displayName": "Dragon Fruit (White)"
+  },
   {
-    "id": 6,
+    "id": "6",
     "botanicalName": "Grape Table 'Flame Seedless'",
     "commonName": "Flame Seedless European Grape",
     "containerSize": "5 gallon",
     "basePrice": 36.99,
-    "availability": 8
+    "availability": 8,
+    "displayName": "Grape Table 'Flame Seedless'"
   },
   {
-    "id": 7,
+    "id": "7",
     "botanicalName": "Guava 'Mexican White'",
     "commonName": "Mexican Guava, Mexican Cream Guava",
     "containerSize": "15 gallon",
     "basePrice": 99.5,
-    "availability": 1
+    "availability": 1,
+    "displayName": "Guava 'Mexican White'"
   },
   {
-    "id": 8,
+    "id": "8",
     "botanicalName": "Kiwi Vine Magic Hardy Combination (M/F) Prem",
     "commonName": "Kiwi Magic Hardy Kiwi Combination",
     "containerSize": "5 gallon",
     "basePrice": 72.99,
-    
-    "availability": 1
+    "availability": 1,
+    "displayName": "Kiwi Vine Magic Hardy Combination (M/F) Prem"
   },
   {
-    "id": 9,
+    "id": "9",
     "botanicalName": "Nectarine 'Arctic Star'",
     "commonName": "Arctic Star Nectarine",
     "containerSize": "15 gallon",
     "basePrice": 72.99,
-    
-    "availability": 1
+    "availability": 1,
+    "displayName": "Nectarine 'Arctic Star'"
   },
   {
-    "id": 10,
+    "id": "10",
     "botanicalName": "Nectarine 'Double Delight'",
     "commonName": "Nectarine Double Delight",
     "containerSize": "15 gallon",
     "basePrice": 61.99,
-    "availability": 2
+    "availability": 2,
+    "displayName": "Nectarine 'Double Delight'"
   },
   {
-    "id": 11,
+    "id": "11",
     "botanicalName": "Nectarine 'Double Delight'",
     "commonName": "Nectarine Double Delight",
     "containerSize": "15 gallon",
     "basePrice": 61.99,
-    "availability": 3
+    "availability": 3,
+    "displayName": "Nectarine 'Double Delight'"
   },
   {
-    "id": 12,
+    "id": "12",
     "botanicalName": "Nectarine 'Snow Queen'",
     "commonName": "Snow Queen Nectarine",
     "containerSize": "15 gallon",
     "basePrice": 39.99,
-    "availability": 3
+    "availability": 3,
+    "displayName": "Nectarine 'Snow Queen'"
   },
   {
-    "id": 13,
+    "id": "13",
     "botanicalName": "Nectarine 'Snow Queen'",
     "commonName": "Snow Queen Nectarine",
     "containerSize": "15 gallon",
     "basePrice": 39.99,
-    "availability": 3
+    "availability": 3,
+    "displayName": "Nectarine 'Snow Queen'"
   },
   {
-    "id": 14,
+    "id": "14",
     "botanicalName": "Olive (Olea) 'Arbequina' Standard Prem",
     "commonName": "Arbequina Olive",
     "containerSize": "5 gallon",
     "basePrice": 67.99,
-    "availability": 4
+    "availability": 4,
+    "displayName": "Olive (Olea) 'Arbequina' Standard Prem"
   },
   {
-    "id": 15,
+    "id": "15",
     "botanicalName": "Passiflora edulis Passion Fruit",
     "commonName": "Passion Fruit",
     "containerSize": "5 gallon",
     "basePrice": 28.99,
-    "availability": 2
+    "availability": 2,
+    "displayName": "Passiflora edulis Passion Fruit"
   },
   {
-    "id": 16,
+    "id": "16",
     "botanicalName": "Peach 'Desert Gold'",
     "commonName": "Desert Gold Peach",
     "containerSize": "15 gallon",
     "basePrice": 39.99,
-    "availability": 2
+    "availability": 2,
+    "displayName": "Peach 'Desert Gold'"
   },
   {
-    "id": 17,
+    "id": "17",
     "botanicalName": "Peach 'Galaxy' (Donut)",
     "commonName": "Galaxy Donut Peach",
     "containerSize": "15 gallon",
     "basePrice": 39.99,
-    "availability": 1
+    "availability": 1,
+    "displayName": "Peach 'Galaxy' (Donut)"
   },
   {
-    "id": 18,
+    "id": "18",
     "botanicalName": "Peach 'Babcock'",
     "commonName": "Babcock Peach",
     "containerSize": "15 gallon",
     "basePrice": 61.99,
-    "availability": 1
+    "availability": 1,
+    "displayName": "Peach 'Babcock'"
   },
   {
-    "id": 19,
+    "id": "19",
     "botanicalName": "Peach 'Babcock'",
     "commonName": "Babcock Peach",
     "containerSize": "15 gallon",
     "basePrice": 61.99,
-    "availability": 3
+    "availability": 3,
+    "displayName": "Peach 'Babcock'"
   },
   {
-    "id": 20,
+    "id": "20",
     "botanicalName": "Persimmon 'Fuyu'",
     "commonName": "Fuyu Asian Persimmon, Apple Persimmon",
     "containerSize": "10/15 gallon",
     "basePrice": 110,
-    "availability": 4
+    "availability": 4,
+    "displayName": "Persimmon 'Fuyu'"
   },
   {
-    "id": 21,
+    "id": "21",
     "botanicalName": "Persimmon 'Fuyu'",
     "commonName": "Fuyu Asian Persimmon, Apple Persimmon",
     "containerSize": "10/15 gallon",
     "basePrice": 110,
-    "availability": 5
+    "availability": 5,
+    "displayName": "Persimmon 'Fuyu'"
   },
   {
-    "id": 22,
+    "id": "22",
     "botanicalName": "Plum 'Santa Rosa'",
     "commonName": "Santa Rosa Plum",
     "containerSize": "10/15 gallon",
     "basePrice": 78.99,
-    "availability": 4
+    "availability": 4,
+    "displayName": "Plum 'Santa Rosa'"
   },
   {
-    "id": 23,
+    "id": "23",
     "botanicalName": "Plum 'Santa Rosa'",
     "commonName": "Santa Rosa Plum",
     "containerSize": "10/15 gallon",
     "basePrice": 78.99,
-    "availability": 5
+    "availability": 5,
+    "displayName": "Plum 'Santa Rosa'"
   },
   {
-    "id": 24,
+    "id": "24",
     "botanicalName": "Plum 'Satsuma'",
     "commonName": "Satsuma Plum",
     "containerSize": "15 gallon",
     "basePrice": 72.99,
-    
-    "availability": 1
+    "availability": 1,
+    "displayName": "Plum 'Satsuma'"
   },
   {
-    "id": 25,
+    "id": "25",
     "botanicalName": "Pomegranate 'Wonderful'",
     "commonName": "Wonderful Pomegranate",
     "containerSize": "10/15 gallon",
     "basePrice": 85.99,
-    "availability": 10
+    "availability": 10,
+    "displayName": "Pomegranate 'Wonderful'"
   },
   {
-    "id": 26,
+    "id": "26",
     "botanicalName": "Pomegranate 'Wonderful'",
     "commonName": "Wonderful Pomegranate",
     "containerSize": "10/15 gallon",
     "basePrice": 85.99,
-    "availability": 5
+    "availability": 5,
+    "displayName": "Pomegranate 'Wonderful'"
   },
   {
-    "id": 27,
+    "id": "27",
     "botanicalName": "Pomegranate 'Wonderful'",
     "commonName": "Wonderful Pomegranate",
     "containerSize": "5 gallon",
     "basePrice": 26.99,
-    
-    "availability": 17
+    "availability": 17,
+    "displayName": "Pomegranate 'Wonderful'"
   },
   {
-    "id": 28,
+    "id": "28",
     "botanicalName": "Pomegranate 'Wonderful'",
     "commonName": "Wonderful Pomegranate",
     "containerSize": "5 gallon",
     "basePrice": 26.99,
-    
-    "availability": 8
+    "availability": 8,
+    "displayName": "Pomegranate 'Wonderful'"
   },
   {
-    "id": 29,
+    "id": "29",
     "botanicalName": "Guava Strawberry Psidium (Red)",
     "commonName": "Strawberry Guava",
     "containerSize": "5 gallon",
     "basePrice": 41.99,
-    "availability": 1
+    "availability": 1,
+    "displayName": "Guava Strawberry Psidium (Red)"
   },
   {
-    "id": 30,
+    "id": "30",
     "botanicalName": "Raspberry 'Heritage Red'",
     "commonName": "Heritage Red Raspberry",
     "containerSize": "3/5 gallon",
     "basePrice": 34.99,
-    "availability": 1
+    "availability": 1,
+    "displayName": "Raspberry 'Heritage Red'"
   },
   {
-    "id": 31,
+    "id": "31",
     "botanicalName": "Avocado 'Fuerte' (Type B)",
     "commonName": "Fuerte Avocado, B-Type Flower",
     "containerSize": "15 gallon",
     "basePrice": 140,
-    "availability": 1
+    "availability": 1,
+    "displayName": "Avocado 'Fuerte' (Type B)"
   },
   {
-    "id": 32,
+    "id": "32",
     "botanicalName": "Avocado 'Fuerte' (Type B)",
     "commonName": "Fuerte Avocado, B-Type Flower",
     "containerSize": "15 gallon",
     "basePrice": 140,
-    "availability": 7  },
+    "availability": 7,
+    "displayName": "Avocado 'Fuerte' (Type B)"
+  },
   {
-    "id": 33,
+    "id": "33",
     "botanicalName": "Avocado 'Fuerte' (Type B)",
     "commonName": "Fuerte Avocado, B-Type Flower",
     "containerSize": "24inch/25gallon",
     "basePrice": 260,
-    "availability": 11
+    "availability": 11,
+    "displayName": "Avocado 'Fuerte' (Type B)"
   },
   {
-    "id": 34,
+    "id": "34",
     "botanicalName": "Avocado 'Fuerte' (Type B)",
     "commonName": "Fuerte Avocado, B-Type Flower",
     "containerSize": "24inch/25gallon",
     "basePrice": 260,
-    "availability": 5
+    "availability": 5,
+    "displayName": "Avocado 'Fuerte' (Type B)"
   },
   {
-    "id": 35,
+    "id": "35",
     "botanicalName": "Avocado 'Hass' (Type A)",
     "commonName": "Hass Avocado, A-Type Flower",
     "containerSize": "15 gallon",
     "basePrice": 92.99,
-    "availability": 15
+    "availability": 15,
+    "displayName": "Avocado 'Hass' (Type A)"
   },
   {
-    "id": 36,
+    "id": "36",
     "botanicalName": "Avocado 'Hass' (Type A)",
     "commonName": "Hass Avocado, A-Type Flower",
     "containerSize": "15 gallon",
     "basePrice": 92.99,
-    "availability": 7  },
+    "availability": 7,
+    "displayName": "Avocado 'Hass' (Type A)"
+  },
   {
-    "id": 37,
+    "id": "37",
     "botanicalName": "Avocado 'Hass' (Type A)",
     "commonName": "Hass Avocado, A-Type Flower",
     "containerSize": "24inch/25gallon",
     "basePrice": 465,
-    "availability": 10
+    "availability": 10,
+    "displayName": "Avocado 'Hass' (Type A)"
   },
   {
-    "id": 38,
+    "id": "38",
     "botanicalName": "Avocado 'Hass' (Type A)",
     "commonName": "Hass Avocado, A-Type Flower",
     "containerSize": "24inch/25gallon",
     "basePrice": 465,
-    "availability": 2
+    "availability": 2,
+    "displayName": "Avocado 'Hass' (Type A)"
   },
   {
-    "id": 39,
+    "id": "39",
     "botanicalName": "Avocado 'Holiday' (Semi-Deciduous, Type A)",
     "commonName": "Holiday Avocado, A-Type Flower",
     "containerSize": "5 gallon",
     "basePrice": 57.99,
-    "availability": 1
+    "availability": 1,
+    "displayName": "Avocado 'Holiday' (Semi-Deciduous, Type A)"
   },
   {
-    "id": 40,
+    "id": "40",
     "botanicalName": "Avocado 'Lamb Hass' (Type A)",
     "commonName": "Lamb Hass Avocado, A-Type Flower",
     "containerSize": "15 gallon",
     "basePrice": 92.99,
-    "availability": 3
+    "availability": 3,
+    "displayName": "Avocado 'Lamb Hass' (Type A)"
   },
   {
-    "id": 41,
+    "id": "41",
     "botanicalName": "Avocado 'Lamb Hass' (Type A)",
     "commonName": "Lamb Hass Avocado, A-Type Flower",
     "containerSize": "15 gallon",
     "basePrice": 92.99,
-    "availability": 0
+    "availability": 0,
+    "displayName": "Avocado 'Lamb Hass' (Type A)"
   },
   {
-    "id": 42,
+    "id": "42",
     "botanicalName": "Avocado 'Mexicola Grande' (Type A)",
     "commonName": "Mexicola Grande Avocado, A-Type Flower",
     "containerSize": "15 gallon",
     "basePrice": 92.99,
-    "availability": 6
+    "availability": 6,
+    "displayName": "Avocado 'Mexicola Grande' (Type A)"
   },
   {
-    "id": 43,
+    "id": "43",
     "botanicalName": "Avocado 'Zutano' (Type B)",
     "commonName": "Zutano Avocado, B-Type Flower",
     "containerSize": "15 gallon",
     "basePrice": 92.99,
-    "availability": 9
+    "availability": 9,
+    "displayName": "Avocado 'Zutano' (Type B)"
   },
   {
-    "id": 44,
+    "id": "44",
     "botanicalName": "Kumquat 'Nagami' Low-Branch",
     "commonName": "Nagami Kumquat",
     "containerSize": "20/25 gallon",
     "basePrice": 465,
-    "availability": 2
+    "availability": 2,
+    "displayName": "Kumquat 'Nagami' Low-Branch"
   },
   {
-    "id": 45,
+    "id": "45",
     "botanicalName": "Kumquat 'Nagami' Standard",
     "commonName": "Nagami Kumquat",
     "containerSize": "10/15 gallon",
     "basePrice": 165,
-    "availability": 6
+    "availability": 6,
+    "displayName": "Kumquat 'Nagami' Standard"
   },
   {
-    "id": 46,
+    "id": "46",
     "botanicalName": "Kumquat 'Nagami' Standard",
     "commonName": "Nagami Kumquat",
     "containerSize": "20/25 gallon",
     "basePrice": 550,
-    "availability": 1
+    "availability": 1,
+    "displayName": "Kumquat 'Nagami' Standard"
   },
   {
-    "id": 47,
+    "id": "47",
     "botanicalName": "Lemon 'Eureka' Bush",
     "commonName": "Eureka Lemon",
     "containerSize": "10/15 gallon",
     "basePrice": 165,
-    "availability": 10
+    "availability": 10,
+    "displayName": "Lemon 'Eureka' Bush"
   },
   {
-    "id": 48,
+    "id": "48",
     "botanicalName": "Lemon 'Eureka' Bush",
     "commonName": "Eureka Lemon",
     "containerSize": "3/5 gallon",
     "basePrice": 47.99,
-    "availability": 4
+    "availability": 4,
+    "displayName": "Lemon 'Eureka' Bush"
   },
   {
-    "id": 49,
+    "id": "49",
     "botanicalName": "Lemon 'Eureka' Standard",
     "commonName": "Eureka Lemon",
     "containerSize": "10/15 gallon",
     "basePrice": 165,
-    "availability": 9
+    "availability": 9,
+    "displayName": "Lemon 'Eureka' Standard"
   },
   {
-    "id": 50,
+    "id": "50",
     "botanicalName": "Lemon 'Eureka Variegated Pink' Standard",
     "commonName": "Pink Variegated Eureka Lemon",
     "containerSize": "10/15 gallon",
     "basePrice": 155,
-    "availability": 6
+    "availability": 6,
+    "displayName": "Lemon 'Eureka Variegated Pink' Standard"
   },
   {
-    "id": 51,
+    "id": "51",
     "botanicalName": "Lemon 'Improved Meyer' Bush",
     "commonName": "Meyer Lemon",
     "containerSize": "10/15 gallon",
     "basePrice": 120,
-    "availability": 11
+    "availability": 11,
+    "displayName": "Lemon 'Improved Meyer' Bush"
   },
   {
-    "id": 52,
+    "id": "52",
     "botanicalName": "Lemon 'Improved Meyer' Bush",
     "commonName": "Meyer Lemon",
     "containerSize": "20/25 gallon",
     "basePrice": 495,
-    "availability": 1
+    "availability": 1,
+    "displayName": "Lemon 'Improved Meyer' Bush"
   },
   {
-    "id": 53,
+    "id": "53",
     "botanicalName": "Lemon 'Improved Meyer' Bush",
     "commonName": "Meyer Lemon",
     "containerSize": "5 gallon",
     "basePrice": 51.99,
-    "availability": 1
+    "availability": 1,
+    "displayName": "Lemon 'Improved Meyer' Bush"
   },
   {
-    "id": 54,
+    "id": "54",
     "botanicalName": "Lemon 'Improved Meyer' Espalier",
     "commonName": "Meyer Lemon",
     "containerSize": "10/15 gallon",
     "basePrice": 140,
-    "availability": 4
+    "availability": 4,
+    "displayName": "Lemon 'Improved Meyer' Espalier"
   },
   {
-    "id": 55,
+    "id": "55",
     "botanicalName": "Lemon 'Improved Meyer' Espalier",
     "commonName": "Meyer Lemon",
     "containerSize": "5 gallon",
     "basePrice": 72.99,
-    
-    "availability": 6
+    "availability": 6,
+    "displayName": "Lemon 'Improved Meyer' Espalier"
   },
   {
-    "id": 56,
+    "id": "56",
     "botanicalName": "Lemon 'Improved Meyer' Standard",
     "commonName": "Meyer Lemon",
     "containerSize": "10/15 gallon",
     "basePrice": 120,
-    "availability": 16
+    "availability": 16,
+    "displayName": "Lemon 'Improved Meyer' Standard"
   },
   {
-    "id": 57,
+    "id": "57",
     "botanicalName": "Lemon 'Improved Meyer' Standard",
     "commonName": "Meyer Lemon",
     "containerSize": "20/25 gallon",
     "basePrice": 545,
-    "availability": 2
+    "availability": 2,
+    "displayName": "Lemon 'Improved Meyer' Standard"
   },
   {
-    "id": 58,
+    "id": "58",
     "botanicalName": "Lime 'Bearss' Bush",
     "commonName": "Tahitian Lime, Persian Lime, Bearss Lime",
     "containerSize": "10/15 gallon",
     "basePrice": 165,
-    "availability": 4
+    "availability": 4,
+    "displayName": "Lime 'Bearss' Bush"
   },
   {
-    "id": 59,
+    "id": "59",
     "botanicalName": "Lime 'Bearss' Standard",
     "commonName": "Tahitian Lime, Persian Lime, Bearss Lime",
     "containerSize": "10/15 gallon",
     "basePrice": 165,
-    "availability": 12
+    "availability": 12,
+    "displayName": "Lime 'Bearss' Standard"
   },
   {
-    "id": 60,
+    "id": "60",
     "botanicalName": "Lime 'Bearss' Standard",
     "commonName": "Tahitian Lime, Persian Lime, Bearss Lime",
     "containerSize": "20/25 gallon",
     "basePrice": 545,
-    "availability": 4
+    "availability": 4,
+    "displayName": "Lime 'Bearss' Standard"
   },
   {
-    "id": 61,
+    "id": "61",
     "botanicalName": "Lime 'Mexican Thornless' Bush",
     "commonName": "Thornless Key Lime, Bartender's Lime",
     "containerSize": "10/15 gallon",
     "basePrice": 155,
-    "availability": 8
+    "availability": 8,
+    "displayName": "Lime 'Mexican Thornless' Bush"
   },
   {
-    "id": 62,
+    "id": "62",
     "botanicalName": "Mandarin 'Clementine' Bush",
     "commonName": "Clementine Mandarin",
     "containerSize": "10/15 gallon",
     "basePrice": 155,
-    "availability": 3
+    "availability": 3,
+    "displayName": "Mandarin 'Clementine' Bush"
   },
   {
-    "id": 63,
+    "id": "63",
     "botanicalName": "Mandarin 'Frost Owari' Satsuma Standard",
     "commonName": "Owari Satsuma Mandarin (Low Seeds)",
     "containerSize": "20/25 gallon",
     "basePrice": 545,
-    "availability": 2
+    "availability": 2,
+    "displayName": "Mandarin 'Frost Owari' Satsuma Standard"
   },
   {
-    "id": 64,
+    "id": "64",
     "botanicalName": "Mandarin 'Tahoe Gold' Standard",
     "commonName": "Tahoe Gold Mandarin",
     "containerSize": "10/15 gallon",
     "basePrice": 155,
-    "availability": 5
+    "availability": 5,
+    "displayName": "Mandarin 'Tahoe Gold' Standard"
   },
   {
-    "id": 65,
+    "id": "65",
     "botanicalName": "Orange 'Cara Cara' Standard",
     "commonName": "Cara Cara Navel Orange, Red Navel",
     "containerSize": "10/15 gallon",
     "basePrice": 155,
-    "availability": 9
+    "availability": 9,
+    "displayName": "Orange 'Cara Cara' Standard"
   },
   {
-    "id": 66,
+    "id": "66",
     "botanicalName": "Orange 'Midknight' Valencia Standard",
     "commonName": "Midknight Valencia Orange",
     "containerSize": "10/15 gallon",
     "basePrice": 160,
-    "availability": 5
+    "availability": 5,
+    "displayName": "Orange 'Midknight' Valencia Standard"
   },
   {
-    "id": 67,
+    "id": "67",
     "botanicalName": "Orange 'Washington' Standard",
     "commonName": "Washington Navel Orange",
     "containerSize": "10/15 gallon",
     "basePrice": 165,
-    "availability": 3
+    "availability": 3,
+    "displayName": "Orange 'Washington' Standard"
   },
   {
-    "id": 68,
+    "id": "68",
     "botanicalName": "Pummelo 'Chandler' Standard",
     "commonName": "Chandler Pummelo",
     "containerSize": "20/25 gallon",
     "basePrice": 260,
-    "availability": 1
+    "availability": 1,
+    "displayName": "Pummelo 'Chandler' Standard"
   },
   {
-    "id": 69,
+    "id": "69",
     "botanicalName": "Tangelo Minneola Standard",
     "commonName": "Minneola Tangelo",
     "containerSize": "10/15 gallon",
     "basePrice": 155,
-    "availability": 4
+    "availability": 4,
+    "displayName": "Tangelo Minneola Standard"
   }
 ]
-
