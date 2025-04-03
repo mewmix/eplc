@@ -1,37 +1,64 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Search, Filter, ShoppingCart, Leaf } from "lucide-react"
-import { plantData } from "@/lib/plant-data"
-import { PlantCard } from "@/components/plant-card"
-import { CartSidebar } from "@/components/cart-sidebar"
-import { CheckoutForm } from "@/components/checkout-form"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState, useEffect } from "react";
+import { Search, Filter, ShoppingCart, Leaf } from "lucide-react";
+import { PlantCard } from "@/components/plant-card";
+import { CartSidebar } from "@/components/cart-sidebar";
+import { CheckoutForm } from "@/components/checkout-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/use-toast";
 
 export function PlantShop() {
-  const [plants, setPlants] = useState(plantData)
-  const [filteredPlants, setFilteredPlants] = useState(plantData)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [filterType, setFilterType] = useState("all")
-  const [sortBy, setSortBy] = useState("name")
-  const [cart, setCart] = useState([])
-  const [isCartOpen, setIsCartOpen] = useState(false)
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
-  const [activeCategory, setActiveCategory] = useState("all")
+  // Remove the direct import of `plantData`
+  // import { plantData } from "@/lib/plant-data"
+
+  // Instead, initialize empty arrays
+  const [plants, setPlants] = useState([]);
+  const [filteredPlants, setFilteredPlants] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState("all");
+  const [sortBy, setSortBy] = useState("name");
+  const [cart, setCart] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("all");
   const [cartUpdated, setCartUpdated] = useState(false);
+
+  // 1) Fetch the JSON from /plant-data.json after the component mounts
+  useEffect(() => {
+    fetch("/plant-data.json")
+      .then((res) => res.json())
+      .then((data) => {
+        // 2) Dynamically add retailPrice to each plant
+        const updated = data.map((plant) => ({
+          ...plant,
+          retailPrice: plant.basePrice * 1.75,
+        }));
+
+        setPlants(updated);
+        setFilteredPlants(updated);
+      })
+      .catch((err) => {
+        console.error("Error fetching plant-data.json:", err);
+      });
+  }, []);
 
   // Get unique plant categories
   const getPlantCategories = () => {
-    const categories = new Set()
-
+    const categories = new Set();
     plants.forEach((plant) => {
-      const name = plant.commonName.toLowerCase()
-
-      if (name.includes("avocado")) categories.add("avocado")
+      const name = plant.commonName.toLowerCase();
+      if (name.includes("avocado")) categories.add("avocado");
       else if (
         name.includes("citrus") ||
         name.includes("lemon") ||
@@ -42,9 +69,13 @@ export function PlantShop() {
         name.includes("tangelo") ||
         name.includes("pummelo")
       )
-        categories.add("citrus")
-      else if (name.includes("berry") || name.includes("raspberry") || name.includes("blueberry"))
-        categories.add("berries")
+        categories.add("citrus");
+      else if (
+        name.includes("berry") ||
+        name.includes("raspberry") ||
+        name.includes("blueberry")
+      )
+        categories.add("berries");
       else if (
         name.includes("stone fruit") ||
         name.includes("peach") ||
@@ -52,25 +83,24 @@ export function PlantShop() {
         name.includes("nectarine") ||
         name.includes("cherry")
       )
-        categories.add("stone-fruit")
-      else categories.add("other")
-    })
+        categories.add("stone-fruit");
+      else categories.add("other");
+    });
 
-    return ["all", ...Array.from(categories)]
-  }
+    return ["all", ...Array.from(categories)];
+  };
 
-  const categories = getPlantCategories()
+  const categories = getPlantCategories();
 
-  // Filter and sort plants
+  // Filter and sort plants whenever dependencies change
   useEffect(() => {
-    let result = [...plants]
+    let result = [...plants];
 
-    // Apply category filter
+    // Category filter
     if (activeCategory !== "all") {
       result = result.filter((plant) => {
-        const name = plant.commonName.toLowerCase()
-
-        if (activeCategory === "avocado" && name.includes("avocado")) return true
+        const name = plant.commonName.toLowerCase();
+        if (activeCategory === "avocado" && name.includes("avocado")) return true;
         if (
           activeCategory === "citrus" &&
           (name.includes("citrus") ||
@@ -82,12 +112,14 @@ export function PlantShop() {
             name.includes("tangelo") ||
             name.includes("pummelo"))
         )
-          return true
+          return true;
         if (
           activeCategory === "berries" &&
-          (name.includes("berry") || name.includes("raspberry") || name.includes("blueberry"))
+          (name.includes("berry") ||
+            name.includes("raspberry") ||
+            name.includes("blueberry"))
         )
-          return true
+          return true;
         if (
           activeCategory === "stone-fruit" &&
           (name.includes("stone fruit") ||
@@ -96,7 +128,7 @@ export function PlantShop() {
             name.includes("nectarine") ||
             name.includes("cherry"))
         )
-          return true
+          return true;
         if (
           activeCategory === "other" &&
           !(
@@ -119,164 +151,169 @@ export function PlantShop() {
             name.includes("cherry")
           )
         )
-          return true
-
-        return false
-      })
+          return true;
+        return false;
+      });
     }
 
-    // Apply search filter
+    // Search filter
     if (searchQuery) {
-      const query = searchQuery.toLowerCase()
+      const q = searchQuery.toLowerCase();
       result = result.filter(
-        (plant) => plant.botanicalName.toLowerCase().includes(query) || plant.commonName.toLowerCase().includes(query),
-      )
+        (plant) =>
+          plant.botanicalName.toLowerCase().includes(q) ||
+          plant.commonName.toLowerCase().includes(q)
+      );
     }
 
-    // Apply type filter
+    // Type filter
     if (filterType !== "all") {
-      result = result.filter((plant) => plant.commonName.toLowerCase().includes(filterType.toLowerCase()))
+      result = result.filter((plant) =>
+        plant.commonName.toLowerCase().includes(filterType.toLowerCase())
+      );
     }
 
-    // Apply sorting
+    // Sorting
     if (sortBy === "name") {
-      result.sort((a, b) => a.commonName.localeCompare(b.commonName))
+      result.sort((a, b) => a.commonName.localeCompare(b.commonName));
     } else if (sortBy === "price-low") {
-      result.sort((a, b) => a.retailPrice - b.retailPrice)
+      result.sort((a, b) => a.retailPrice - b.retailPrice);
     } else if (sortBy === "price-high") {
-      result.sort((a, b) => b.retailPrice - a.retailPrice)
+      result.sort((a, b) => b.retailPrice - a.retailPrice);
     }
 
-    setFilteredPlants(result)
-  }, [plants, searchQuery, filterType, sortBy, activeCategory])
+    setFilteredPlants(result);
+  }, [plants, searchQuery, filterType, sortBy, activeCategory]);
 
+  // Add to cart
   const addToCart = (plant) => {
     if (plant.availability === 0) return;
-  
-    const existingItem = cart.find((item) => item.id === plant.id);
-  
-    if (existingItem) {
-      setCart(cart.map((item) => (item.id === plant.id ? { ...item, quantity: item.quantity + 1 } : item)));
+
+    const existing = cart.find((item) => item.id === plant.id);
+    if (existing) {
+      setCart(
+        cart.map((item) =>
+          item.id === plant.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
     } else {
       setCart([...cart, { ...plant, quantity: 1 }]);
     }
-  
-    // ✅ Fix: Set cart updated state
+
     setCartUpdated(true);
-  
-    // ✅ Show a toast notification
     toast({
       title: "Item Added",
       description: `${plant.commonName} has been added to your cart.`,
       status: "success",
     });
-  
-    // Reset cart updated state after a short delay
+
     setTimeout(() => setCartUpdated(false), 2000);
   };
-  
-  // Remove plant from cart
-  const removeFromCart = (plantId) => {
-    setCart(cart.filter((item) => item.id !== plantId))
-  }
 
-  // Update quantity in cart
+  // Remove from cart
+  const removeFromCart = (plantId) => {
+    setCart(cart.filter((item) => item.id !== plantId));
+  };
+
+  // Update quantity
   const updateQuantity = (plantId, newQuantity) => {
     if (newQuantity < 1) {
-      removeFromCart(plantId)
-      return
+      removeFromCart(plantId);
+      return;
     }
+    setCart(
+      cart.map((item) =>
+        item.id === plantId ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
 
-    setCart(cart.map((item) => (item.id === plantId ? { ...item, quantity: newQuantity } : item)))
-  }
+  // Cart item count
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Calculate total items in cart
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0)
-
-  // Get unique plant types for filter
+  // Plant types (for your type filter)
   const plantTypes = [
     "all",
     ...new Set(
-      plants.map((plant) => {
-        const nameParts = plant.commonName.split(" ")
-        return nameParts[nameParts.length - 1]
-      }),
+      plants.map((p) => {
+        const parts = p.commonName.split(" ");
+        return parts[parts.length - 1];
+      })
     ),
-  ]
+  ];
 
+  // Checkout
   const handleCheckout = () => {
     if (cart.length === 0) {
       alert("Your cart is empty.");
       return;
     }
-  
-    const recipientEmail = "orders@earthpeoplelandcare.com"; // Change to your business email
+    const recipientEmail = "orders@earthpeoplelandcare.com";
     const subject = encodeURIComponent("New Order Inquiry from Earth People LandCare");
-  
-    // Format cart items into a readable list
+
     const orderDetails = cart
-      .map((item) => `• ${item.quantity}x ${item.commonName} - $${item.retailPrice.toFixed(2)}`)
-      .join("%0A"); // `%0A` is a new line in `mailto:`
-  
-    // Calculate total price
-    const totalPrice = cart.reduce((sum, item) => sum + item.retailPrice * item.quantity, 0).toFixed(2);
-  
-    // Default message for inquiry
+      .map(
+        (item) =>
+          `• ${item.quantity}x ${item.commonName} - $${item.retailPrice.toFixed(2)}`
+      )
+      .join("%0A");
+
+    const totalPrice = cart
+      .reduce((sum, i) => sum + i.retailPrice * i.quantity, 0)
+      .toFixed(2);
+
     const message = `
-  Hello,
-  
-  I would like to inquire about placing an order for the following plants:
-  
-  ${orderDetails}
-  
-  Total Estimated Cost: $${totalPrice}
-  
-  Please confirm availability and provide further details.
-  
-  Best regards,
-  [Your Name]
-  `;
-  
-    // Generate mailto link
-    const mailtoLink = `mailto:${recipientEmail}?subject=${subject}&body=${encodeURIComponent(message)}`;
-  
-    // Open default email client
+Hello,
+
+I would like to inquire about placing an order for the following plants:
+
+${orderDetails}
+
+Total Estimated Cost: $${totalPrice}
+
+Please confirm availability and provide further details.
+
+Best regards,
+[Your Name]
+`;
+
+    const mailtoLink = `mailto:${recipientEmail}?subject=${subject}&body=${encodeURIComponent(
+      message
+    )}`;
     window.location.href = mailtoLink;
   };
-  
-  // Handle form submission
+
+  // Checkout form submission
   const handleFormSubmit = (formData) => {
-    // In a real app, this would send the data to a server
-    console.log("Form submitted:", formData)
-    console.log("Cart items:", cart)
+    console.log("Form submitted:", formData);
+    console.log("Cart items:", cart);
 
-    // Show confirmation
-    alert("Thank you! We've received your order and will contact you shortly with a quote.")
+    alert("Thank you! We've received your order and will contact you shortly with a quote.");
+    setCart([]);
+    setIsCheckoutOpen(false);
+  };
 
-    // Reset cart and close checkout
-    setCart([])
-    setIsCheckoutOpen(false)
-  }
-
-  // Get category display name
+  // Helper for category display
   const getCategoryDisplayName = (category) => {
     switch (category) {
       case "all":
-        return "All Plants"
+        return "All Plants";
       case "avocado":
-        return "Avocados"
+        return "Avocados";
       case "citrus":
-        return "Citrus"
+        return "Citrus";
       case "berries":
-        return "Berries"
+        return "Berries";
       case "stone-fruit":
-        return "Stone Fruits"
+        return "Stone Fruits";
       case "other":
-        return "Other Plants"
+        return "Other Plants";
       default:
-        return category.charAt(0).toUpperCase() + category.slice(1)
+        return category.charAt(0).toUpperCase() + category.slice(1);
     }
-  }
+  };
 
   return (
     <div className="relative">
@@ -337,15 +374,19 @@ export function PlantShop() {
             </Select>
           </div>
 
-          <Button variant="outline" className="flex items-center gap-2 ml-auto relative" onClick={() => setIsCartOpen(true)}>
-  <ShoppingCart size={18} />
-  {totalItems > 0 && (
-    <span className="absolute -top-2 -right-2 bg-green-700 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-      {totalItems}
-    </span>
-  )}
-  <span>Cart</span>
-</Button>
+          <Button
+            variant="outline"
+            className="flex items-center gap-2 ml-auto relative"
+            onClick={() => setIsCartOpen(true)}
+          >
+            <ShoppingCart size={18} />
+            {totalItems > 0 && (
+              <span className="absolute -top-2 -right-2 bg-green-700 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
+            <span>Cart</span>
+          </Button>
         </div>
       </div>
 
@@ -377,6 +418,5 @@ export function PlantShop() {
         <CheckoutForm cart={cart} onClose={() => setIsCheckoutOpen(false)} onSubmit={handleFormSubmit} />
       )}
     </div>
-  )
+  );
 }
-
