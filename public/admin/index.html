@@ -3,24 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CMS Test</title>
-  <script src="https://unpkg.com/netlify-cms-app@2.15.72/dist/netlify-cms-app.js"></script>
+  <title>Content Manager</title>
+
+  <!-- 1. Add the Netlify Identity Widget script -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+  <!-- 2. Include the V3 Decap CMS script -->
+  <script src="https://unpkg.com/decap-cms-app@^3.0.0/dist/decap-cms-app.js"></script>
+
+  <!-- 3. NO explicit window.CMS.init() needed here -->
+
 </head>
 <body>
-  <!-- Just the CMS init script -->
-  <script>
-    // Check if CMS object exists before calling init
-    if (window.CMS) {
-      console.log('CMS object found, attempting init...');
-      try {
-         window.CMS.init();
-         console.log('CMS init called successfully.');
-      } catch (e) {
-         console.error('Error during CMS.init():', e);
-      }
-    } else {
-      console.error('Error: window.CMS object not found. Script likely failed to load or execute.');
-    }
-  </script>
+  <!-- The body can be empty; the scripts will populate it -->
 </body>
 </html>
