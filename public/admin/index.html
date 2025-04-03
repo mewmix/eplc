@@ -3,15 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Content Manager</title>
-  <!-- Include the Decap CMS script -->
-  <script src="https://unpkg.com/netlify-cms-app@^2.10.192/dist/netlify-cms-app.js"></script>
+  <title>CMS Test</title>
+  <script src="https://unpkg.com/netlify-cms-app@2.10.192/dist/netlify-cms-app.js"></script>
 </head>
 <body>
-  <!-- Initialize the CMS -->
+  <!-- Just the CMS init script -->
   <script>
-    // Use Decap CMS CJS proxy
-    window.CMS.init();
+    // Check if CMS object exists before calling init
+    if (window.CMS) {
+      console.log('CMS object found, attempting init...');
+      try {
+         window.CMS.init();
+         console.log('CMS init called successfully.');
+      } catch (e) {
+         console.error('Error during CMS.init():', e);
+      }
+    } else {
+      console.error('Error: window.CMS object not found. Script likely failed to load or execute.');
+    }
   </script>
 </body>
 </html>
