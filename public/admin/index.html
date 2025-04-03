@@ -5,16 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Content Manager</title>
 
-  <!-- 1. Add the Netlify Identity Widget script -->
+  <!-- Keep Netlify Identity Widget script -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
-  <!-- 2. Include the V3 Decap CMS script -->
-  <script src="https://unpkg.com/decap-cms-app@^3.0.0/dist/decap-cms-app.js"></script>
-
-  <!-- 3. NO explicit window.CMS.init() needed here -->
+  <!-- ** USE THE V2 CMS SCRIPT (Version 2.15.72 confirmed to exist) ** -->
+  <script src="https://unpkg.com/netlify-cms-app@2.15.72/dist/netlify-cms-app.js"></script>
+  <!-- *************************************************************** -->
 
 </head>
 <body>
-  <!-- The body can be empty; the scripts will populate it -->
+  <!-- Add back the explicit init for V2, wrapped in DOMContentLoaded -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.CMS) {
+        console.log('CMS object found (v2), attempting init...');
+        try {
+           window.CMS.init(); // V2 often needs explicit init
+           console.log('CMS init called successfully (v2).');
+        } catch (e) {
+           console.error('Error during CMS.init() (v2):', e);
+        }
+      } else {
+        // This error means the script didn't load/execute correctly
+        console.error('Error: window.CMS object not found after DOMContentLoaded (v2). Check Network tab for script load errors.');
+      }
+    });
+  </script>
 </body>
 </html>
