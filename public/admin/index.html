@@ -8,28 +8,23 @@
   <!-- Keep Netlify Identity Widget script -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
-  <!-- ** USE THE V2 CMS SCRIPT (Version 2.15.72 confirmed to exist) ** -->
-  <script src="https://unpkg.com/netlify-cms-app@2.15.72/dist/netlify-cms-app.js"></script>
-  <!-- *************************************************************** -->
+  <!-- ** TRY DECAP V3 via jsDelivr ** -->
+  <script src="https://cdn.jsdelivr.net/npm/decap-cms-app@^3.0.0/dist/decap-cms-app.js"></script>
+  <!-- ****************************** -->
 
 </head>
 <body>
-  <!-- Add back the explicit init for V2, wrapped in DOMContentLoaded -->
+  <!-- Remove explicit init - V3 usually handles this -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      if (window.CMS) {
-        console.log('CMS object found (v2), attempting init...');
-        try {
-           window.CMS.init(); // V2 often needs explicit init
-           console.log('CMS init called successfully (v2).');
-        } catch (e) {
-           console.error('Error during CMS.init() (v2):', e);
-        }
-      } else {
-        // This error means the script didn't load/execute correctly
-        console.error('Error: window.CMS object not found after DOMContentLoaded (v2). Check Network tab for script load errors.');
-      }
-    });
+      // Optional: You could add a check after DOMContentLoaded
+      // to see if window.CMS exists, but don't call init().
+      // document.addEventListener('DOMContentLoaded', function() {
+      //   if (!window.CMS) {
+      //     console.error("Decap CMS (V3) object not found after DOMContentLoaded.");
+      //   } else {
+      //     console.log("Decap CMS (V3) object found.");
+      //   }
+      // });
   </script>
 </body>
 </html>
