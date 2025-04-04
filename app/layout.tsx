@@ -15,10 +15,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
+    <html lang="en">
     <head>
     <Script
            src="https://identity.netlify.com/v1/netlify-identity-widget.js"
-           strategy="beforeInteractive">
+           strategy="beforeInteractive"/>
     </head>
       <body className="min-h-screen bg-background font-sans antialiased">
         {children}
