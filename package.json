@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && cp data/plant-data.json public/plant-data.json",
     "start": "next start",
     "lint": "next lint"
   },
