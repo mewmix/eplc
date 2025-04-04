@@ -1,0 +1,5 @@
+[build]
+  command = "next build"
+
+[functions]
+  node_bundler = "esbuild"
