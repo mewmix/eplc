@@ -14,44 +14,62 @@ try {
 }
 
 // Define the CMS Configuration Object
+// Inside app/(admin)/admin/[[...slug]]/page.tsx
+
 const cmsConfig = {
   backend: {
     name: 'git-gateway',
-    branch: 'main', // Ensure this matches your default Git branch
+    branch: 'main',
   },
-  media_folder: 'public/uploads/images', // Relative to repo root
-  public_folder: '/uploads/images',     // URL path for media
+  media_folder: 'public/uploads/images',
+  public_folder: '/uploads/images',
   collections: [
     {
       name: 'plant_inventory',
       label: 'Plant Inventory',
       description: 'Manage all plant listings. Retail price is Base Price x 1.75 (calculated automatically).',
-      files: [
+      files: [ // Editing specific files
         {
-          label: 'All Plants',
-          name: 'plants',
-          file: 'public/plant-data.json', // Path from repo root to your data file
-          widget: 'list',
-          label_singular: "plant",
-          summary: "{{fields.commonName}} ({{fields.containerSize}})", // Summary for list items in UI
-          fields: [ // Fields for each object in the plant list
-            { label: 'ID', name: 'id', widget: 'string', hint: "Unique ID (e.g., 'apple-fuji'). Avoid changing." },
-            { label: 'Display Name', name: 'displayName', widget: 'string', hint: "Full name in catalog (e.g., Apple 'Fuji' 10/15 gal)" },
-            { label: 'Common Name', name: 'commonName', widget: 'string', hint: "Simpler name (e.g., Fuji Apple)" },
-            { label: 'Botanical Name', name: 'botanicalName', widget: 'string', required: false },
-            { label: 'Container Size', name: 'containerSize', widget: 'string', hint: 'e.g., 5 gallon, 10/15 gallon' },
-            { label: 'Base Price ($)', name: 'basePrice', widget: 'number', value_type: 'float', min: 0, step: 0.01, hint: 'Wholesale/cost. Retail is auto-calculated.' },
-            { label: 'Available Quantity', name: 'available', widget: 'number', value_type: 'int', default: 0, min: 0 },
-            // Use the 'image' widget for better UX (upload/media library)
-            { label: "Image (Upload or Path)", name: "image", widget: "image", required: false, allow_multiple: false, hint: "Upload an image or enter a URL/path." }
-          ],
-        },
-      ],
-    },
-    // Add other collections here if needed
+          label: 'All Plants Data', // Label for the file entry
+          name: 'plant_data_file', // Internal name for the file entry
+          file: 'public/plant-data.json', // Path to the file
+
+          // ** REMOVED 'widget: list' from here **
+
+          // Fields describing the *content structure* of the file:
+          fields: [
+            {
+              // ** THIS field represents the JSON array itself **
+              label: 'Plants', // Label for the list editor in the UI
+              name: 'plants_list', // Internal name for the list field (can be anything)
+              widget: 'list', // The widget type for this field IS list
+              label_singular: "Plant", // Label for the 'Add' button
+              summary: "{{fields.commonName}} ({{fields.containerSize}})", // Summary for items
+
+              // ** THIS 'fields' array describes objects WITHIN the list **
+              fields: [
+                { label: 'ID', name: 'id', widget: 'string', hint: "Unique ID (e.g., 'apple-fuji'). Avoid changing." },
+                { label: 'Display Name', name: 'displayName', widget: 'string', hint: "Full name in catalog (e.g., Apple 'Fuji' 10/15 gal)" },
+                { label: 'Common Name', name: 'commonName', widget: 'string', hint: "Simpler name (e.g., Fuji Apple)" },
+                { label: 'Botanical Name', name: 'botanicalName', widget: 'string', required: false }, // Ensure required:false if might be missing
+                { label: 'Container Size', name: 'containerSize', widget: 'string', hint: 'e.g., 5 gallon, 10/15 gallon' },
+                { label: 'Base Price ($)', name: 'basePrice', widget: 'number', value_type: 'float', min: 0, step: 0.01, hint: 'Wholesale/cost. Retail is auto-calculated.' },
+                { label: 'Available Quantity', name: 'available', widget: 'number', value_type: 'int', default: 0, min: 0 },
+                // Ensure image field exists in JSON or is required:false here
+                { label: "Image (Upload or Path)", name: "image", widget: "image", required: false, allow_multiple: false, hint: "Upload an image or enter a URL/path." }
+              ]
+              // ** END of fields for objects within the list **
+            }
+          ]
+          // ** END of fields describing the file content **
+        }
+      ]
+    }
+    // Add other collections if needed
   ],
 };
 
+// ... rest of the page.tsx component (useEffect, export default) ...
 // The React component that will initialize and render the CMS
 const AdminCMSPage = () => {
   useEffect(() => {
@@ -78,4 +96,4 @@ const AdminCMSPage = () => {
   return <div id="nc-root" />;
 };
 
-export default AdminCMSPage;
+export default AdminCMSPage;l
