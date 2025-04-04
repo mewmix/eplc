@@ -27,6 +27,7 @@ const nextConfig = {
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
   },
+  transpilePackages: ['decap-cms-app', 'decap-cms-core', 'decap-cms-lib-util'],
 }
 
 if (userConfig) {
