@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'decap-cms-app/dist/main.css';
 
 body {
   font-family: Arial, Helvetica, sans-serif;
