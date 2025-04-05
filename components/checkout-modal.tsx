@@ -1,41 +1,40 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useState, useEffect } from "react"
-import { X, Truck, Shovel, Package, Mail, Phone, MessageSquare } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Checkbox } from "@/components/ui/checkbox"
-import { plantsData, baseCosts } from "@/data/plants"
-import { Separator } from "@/components/ui/separator"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ImageUpload } from "@/components/image-upload"
-import { Droplet, Sprout, CloudRain } from "lucide-react"
-import { SuccessView } from "@/components/success-view"
+import type React from "react";
+import { useState, useEffect } from "react";
+import { X, Truck, Shovel, Package, Mail, Phone, MessageSquare } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { plantsData, baseCosts } from "@/data/plants";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ImageUpload } from "@/components/image-upload";
+import { Droplet, Sprout, CloudRain } from "lucide-react";
+import { SuccessView } from "@/components/success-view";
 
 interface CheckoutModalProps {
-  cart: { id: string; quantity: number }[]
-  onClose: () => void
-  onCheckoutComplete: () => void
+  cart: { id: string; quantity: number }[];
+  onClose: () => void;
+  onCheckoutComplete: () => void;
 }
 
-type DeliveryZone = "local" | "regional" | "extended"
-type DeliverySize = "small" | "medium" | "large"
-type ContactPreference = "email" | "phone" | "text"
-type OrderStatus = "form" | "submitting" | "success"
+type DeliveryZone = "local" | "regional" | "extended";
+type DeliverySize = "small" | "medium" | "large";
+type ContactPreference = "email" | "phone" | "text";
+type OrderStatus = "form" | "submitting" | "success";
 
 export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutModalProps) {
-  const [soilBags, setSoilBags] = useState(0)
-  const [includePlanting, setIncludePlanting] = useState(false)
-  const [deliveryZone, setDeliveryZone] = useState<DeliveryZone>("local")
-  const [deliverySize, setDeliverySize] = useState<DeliverySize>("small")
-  const [contactPreference, setContactPreference] = useState<ContactPreference>("email")
-  const [orderStatus, setOrderStatus] = useState<OrderStatus>("form")
+  const [soilBags, setSoilBags] = useState(0);
+  const [includePlanting, setIncludePlanting] = useState(false);
+  const [deliveryZone, setDeliveryZone] = useState<DeliveryZone>("local");
+  const [deliverySize, setDeliverySize] = useState<DeliverySize>("small");
+  const [contactPreference, setContactPreference] = useState<ContactPreference>("email");
+  const [orderStatus, setOrderStatus] = useState<OrderStatus>("form");
   const [contactInfo, setContactInfo] = useState({
     name: "",
     email: "",
@@ -45,68 +44,104 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
     state: "",
     zip: "",
     notes: "",
-  })
+  });
 
-  const [uploadedImages, setUploadedImages] = useState<File[]>([])
-  const [needsIrrigation, setNeedsIrrigation] = useState<boolean | null>(null)
-  const [irrigationType, setIrrigationType] = useState<string>("none")
-  const [needsFertilizer, setNeedsFertilizer] = useState<boolean | null>(null)
-  const [projectTimeline, setProjectTimeline] = useState<string>("flexible")
+  const [uploadedImages, setUploadedImages] = useState<File[]>([]);
+  const [needsIrrigation, setNeedsIrrigation] = useState<boolean | null>(null);
+  const [irrigationType, setIrrigationType] = useState<string>("none");
+  const [needsFertilizer, setNeedsFertilizer] = useState<boolean | null>(null);
+  const [projectTimeline, setProjectTimeline] = useState<string>("flexible");
 
-  // Calculate subtotal for plants only
+  // Calculate costs
   const plantSubtotal = cart.reduce((total, item) => {
-    const plant = plantsData.find((p) => p.id === item.id)
-    return total + (plant ? plant.retailPrice * item.quantity : 0)
-  }, 0)
+    const plant = plantsData.find((p) => p.id === item.id);
+    return total + (plant ? plant.retailPrice * item.quantity : 0);
+  }, 0);
 
-  // Calculate premium soil cost
-  const soilCost = soilBags * 20
+  const soilCost = soilBags * 20;
+  const plantingCost = includePlanting ? plantSubtotal * 1.5 : 0;
+  const getDeliveryCost = () => baseCosts[deliveryZone][deliverySize];
+  const deliveryCost = getDeliveryCost();
+  const total = plantSubtotal + soilCost + plantingCost + deliveryCost;
 
-  // Calculate planting service cost (1.5x the plant price)
-  const plantingCost = includePlanting ? plantSubtotal * 1.5 : 0
-
-  // Calculate delivery cost based on zone and size
-  const getDeliveryCost = () => {
-    return baseCosts[deliveryZone][deliverySize]
-  }
-
-  const deliveryCost = getDeliveryCost()
-
-  // Calculate total
-  const total = plantSubtotal + soilCost + plantingCost + deliveryCost
-
-  // Determine delivery size based on cart contents
   useEffect(() => {
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0)
-
-    if (totalItems <= 3) {
-      setDeliverySize("small")
-    } else if (totalItems <= 10) {
-      setDeliverySize("medium")
-    } else {
-      setDeliverySize("large")
-    }
-  }, [cart])
-
-  // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setOrderStatus("submitting")
-
-    // Simulate sending an email with order details
-    setTimeout(() => {
-      setOrderStatus("success")
-      // In a real application, you would send the order details to your server here
-    }, 1500)
-  }
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    if (totalItems <= 3) setDeliverySize("small");
+    else if (totalItems <= 10) setDeliverySize("medium");
+    else setDeliverySize("large");
+  }, [cart]);
 
   // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setContactInfo((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setContactInfo((prev) => ({ ...prev, [name]: value }));
+  };
 
-  // Render different content based on order status
+  // Convert files to base64 for submission
+  const filesToBase64 = async (files: File[]): Promise<string[]> => {
+    const promises = files.map((file) =>
+      new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(file);
+      })
+    );
+    return Promise.all(promises);
+  };
+
+  // Handle form submission to Netlify
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setOrderStatus("submitting");
+
+    const formData = new FormData();
+    formData.append("form-name", "plant-order"); // Matches the form name attribute
+    formData.append("name", contactInfo.name);
+    formData.append("email", contactInfo.email);
+    formData.append("phone", contactInfo.phone);
+    formData.append("address", `${contactInfo.address}, ${contactInfo.city}, ${contactInfo.state} ${contactInfo.zip}`);
+    formData.append("notes", contactInfo.notes);
+    formData.append("cart", JSON.stringify(cart));
+    formData.append("soilBags", soilBags.toString());
+    formData.append("includePlanting", includePlanting.toString());
+    formData.append("deliveryZone", deliveryZone);
+    formData.append("deliverySize", deliverySize);
+    formData.append("contactPreference", contactPreference);
+    formData.append("needsIrrigation", needsIrrigation === null ? "unsure" : needsIrrigation.toString());
+    formData.append("irrigationType", irrigationType);
+    formData.append("needsFertilizer", needsFertilizer === null ? "unsure" : needsFertilizer.toString());
+    formData.append("projectTimeline", projectTimeline);
+    formData.append("plantSubtotal", plantSubtotal.toFixed(2));
+    formData.append("soilCost", soilCost.toFixed(2));
+    formData.append("plantingCost", plantingCost.toFixed(2));
+    formData.append("deliveryCost", deliveryCost.toFixed(2));
+    formData.append("total", total.toFixed(2));
+
+    // Handle image uploads as base64 strings
+    const imageBase64s = await filesToBase64(uploadedImages);
+    imageBase64s.forEach((base64, index) => {
+      formData.append(`image${index}`, base64);
+    });
+
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        body: formData,
+        headers: { "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundary" }, // Netlify expects multipart/form-data
+      });
+
+      if (response.ok) {
+        setOrderStatus("success");
+      } else {
+        throw new Error("Form submission failed");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setOrderStatus("form"); // Reset to form on error
+      alert("There was an issue submitting your order. Please try again.");
+    }
+  };
+
   const renderContent = () => {
     switch (orderStatus) {
       case "submitting":
@@ -119,22 +154,31 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
             </div>
             <p className="mt-6 text-center text-gray-600">Submitting your order request...</p>
           </div>
-        )
+        );
 
       case "success":
-        return <SuccessView onClose={onCheckoutComplete} contactPreference={contactPreference} />
+        return <SuccessView onClose={onCheckoutComplete} contactPreference={contactPreference} />;
 
       default:
         return (
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={handleSubmit}
+            name="plant-order" // Netlify form name
+            method="POST"
+            data-netlify="true" // Enable Netlify form handling
+            encType="multipart/form-data" // Required for file uploads (simulated here)
+          >
+            {/* Hidden input for Netlify form detection */}
+            <input type="hidden" name="form-name" value="plant-order" />
+
             <div className="grid md:grid-cols-2 gap-6">
               {/* Cart Summary */}
               <div>
                 <h3 className="text-lg font-semibold mb-4">Your Plants</h3>
                 <div className="space-y-4 mb-6">
                   {cart.map((item) => {
-                    const plant = plantsData.find((p) => p.id === item.id)
-                    if (!plant) return null
+                    const plant = plantsData.find((p) => p.id === item.id);
+                    if (!plant) return null;
                     return (
                       <div key={item.id} className="flex justify-between items-center">
                         <div>
@@ -145,7 +189,7 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                         </div>
                         <p className="font-semibold">${(plant.retailPrice * item.quantity).toFixed(2)}</p>
                       </div>
-                    )
+                    );
                   })}
                 </div>
 
@@ -177,6 +221,7 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                         ))}
                       </SelectContent>
                     </Select>
+                    <input type="hidden" name="soilBags" value={soilBags} />
                   </div>
                 </div>
 
@@ -198,6 +243,7 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                   <div className="pl-9">
                     <p className="text-sm text-gray-600 mb-2">Our expert team will plant your selections with care.</p>
                     <p className="text-sm font-medium">Price: 1.5× plant cost (${plantingCost.toFixed(2)})</p>
+                    <input type="hidden" name="includePlanting" value={includePlanting.toString()} />
                   </div>
                 </div>
 
@@ -245,6 +291,8 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                     Delivery size: {deliverySize.charAt(0).toUpperCase() + deliverySize.slice(1)}(
                     {deliverySize === "small" ? "1-3 items" : deliverySize === "medium" ? "4-10 items" : "11+ items"})
                   </p>
+                  <input type="hidden" name="deliveryZone" value={deliveryZone} />
+                  <input type="hidden" name="deliverySize" value={deliverySize} />
                 </div>
 
                 {/* Order Summary */}
@@ -255,35 +303,36 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                       <span>Plants Subtotal:</span>
                       <span>${plantSubtotal.toFixed(2)}</span>
                     </div>
-
                     {soilBags > 0 && (
                       <div className="flex justify-between">
                         <span>Premium Soil ({soilBags} bags):</span>
                         <span>${soilCost.toFixed(2)}</span>
                       </div>
                     )}
-
                     {includePlanting && (
                       <div className="flex justify-between">
                         <span>Planting Service:</span>
                         <span>${plantingCost.toFixed(2)}</span>
                       </div>
                     )}
-
                     <div className="flex justify-between">
                       <span>
                         Delivery ({deliveryZone}, {deliverySize}):
                       </span>
                       <span>${deliveryCost.toFixed(2)}</span>
                     </div>
-
                     <Separator className="my-2" />
-
                     <div className="flex justify-between font-semibold text-base">
                       <span>Estimated Total:</span>
                       <span>${total.toFixed(2)}</span>
                     </div>
                   </div>
+                  <input type="hidden" name="plantSubtotal" value={plantSubtotal.toFixed(2)} />
+                  <input type="hidden" name="soilCost" value={soilCost.toFixed(2)} />
+                  <input type="hidden" name="plantingCost" value={plantingCost.toFixed(2)} />
+                  <input type="hidden" name="deliveryCost" value={deliveryCost.toFixed(2)} />
+                  <input type="hidden" name="total" value={total.toFixed(2)} />
+                  <input type="hidden" name="cart" value={JSON.stringify(cart)} />
                 </div>
               </div>
 
@@ -302,8 +351,7 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                     </div>
                     <div className="ml-3">
                       <p className="text-sm text-yellow-700">
-                        This is an order request. We'll verify inventory and contact you to arrange payment and
-                        delivery.
+                        This is an order request. We'll verify inventory and contact you to arrange payment and delivery.
                       </p>
                     </div>
                   </div>
@@ -317,7 +365,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                       <Label htmlFor="name">Full Name</Label>
                       <Input id="name" name="name" value={contactInfo.name} onChange={handleInputChange} required />
                     </div>
-
                     <div className="grid gap-2">
                       <Label htmlFor="email">Email</Label>
                       <Input
@@ -329,7 +376,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                         required
                       />
                     </div>
-
                     <div className="grid gap-2">
                       <Label htmlFor="phone">Phone</Label>
                       <Input
@@ -356,7 +402,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                         required
                       />
                     </div>
-
                     <div className="grid grid-cols-2 gap-4">
                       <div className="grid gap-2">
                         <Label htmlFor="city">City</Label>
@@ -387,7 +432,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                       <CloudRain className="h-4 w-4 mr-2 text-green-700" />
                       Irrigation Needs
                     </h4>
-
                     <div className="grid gap-3">
                       <Label className="text-sm text-gray-600">Do you need irrigation installed?</Label>
                       <RadioGroup
@@ -408,8 +452,12 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                           <Label htmlFor="irrigation-unsure">Not sure</Label>
                         </div>
                       </RadioGroup>
+                      <input
+                        type="hidden"
+                        name="needsIrrigation"
+                        value={needsIrrigation === null ? "unsure" : needsIrrigation.toString()}
+                      />
                     </div>
-
                     {needsIrrigation && (
                       <div className="grid gap-2">
                         <Label htmlFor="irrigation-type">Irrigation Type</Label>
@@ -424,6 +472,7 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                             <SelectItem value="unsure">Not sure</SelectItem>
                           </SelectContent>
                         </Select>
+                        <input type="hidden" name="irrigationType" value={irrigationType} />
                       </div>
                     )}
                   </div>
@@ -434,7 +483,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                       <Sprout className="h-4 w-4 mr-2 text-green-700" />
                       Fertilizer & Amendments
                     </h4>
-
                     <div className="grid gap-3">
                       <Label className="text-sm text-gray-600">Would you like us to provide fertilizer?</Label>
                       <RadioGroup
@@ -455,6 +503,11 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                           <Label htmlFor="fertilizer-unsure">Not sure</Label>
                         </div>
                       </RadioGroup>
+                      <input
+                        type="hidden"
+                        name="needsFertilizer"
+                        value={needsFertilizer === null ? "unsure" : needsFertilizer.toString()}
+                      />
                     </div>
                   </div>
 
@@ -474,6 +527,7 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                           <SelectItem value="flexible">Flexible</SelectItem>
                         </SelectContent>
                       </Select>
+                      <input type="hidden" name="projectTimeline" value={projectTimeline} />
                     </div>
                   </div>
 
@@ -487,6 +541,9 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                       Photos help us better understand your space and provide more accurate recommendations.
                     </p>
                     <ImageUpload onFileUpload={(file) => setUploadedImages((prev) => [...prev, file])} maxFiles={3} />
+                    {uploadedImages.map((file, index) => (
+                      <input key={index} type="hidden" name={`image${index}`} value={file.name} />
+                    ))}
                   </div>
 
                   {/* Special Instructions */}
@@ -532,6 +589,7 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                         </Label>
                       </div>
                     </RadioGroup>
+                    <input type="hidden" name="contactPreference" value={contactPreference} />
                   </div>
                 </div>
 
@@ -545,9 +603,9 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
               </div>
             </div>
           </form>
-        )
+        );
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -565,10 +623,8 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
             </CardDescription>
           )}
         </CardHeader>
-
         <CardContent>{renderContent()}</CardContent>
       </Card>
     </div>
-  )
+  );
 }
-
