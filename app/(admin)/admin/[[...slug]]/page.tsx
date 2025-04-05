@@ -40,7 +40,7 @@ const cmsConfig: CmsConfig = {
         {
           label: 'All Plants Data',
           name: 'plant_data_file',
-          file: 'data/plant-data.json',
+          file: '/plant-data.json',
           fields: [
             {
               name: 'default', // satisfies TypeScript, not used in JSON

@@ -1,0 +1,54 @@
+backend:
+  name: git-gateway
+  branch: main
+media_folder: public/uploads/images
+public_folder: /uploads/images
+collections:
+  - name: plant_inventory
+    label: Plant Inventory
+    description: Manage all plant listings. Retail price is Base Price x 1.75 (calculated automatically).
+    files:
+      - label: All Plants Data
+        name: plant_data_file
+        file: data/plant-data.json
+        fields:
+          - name: default
+            widget: list
+            label: Plants
+            label_singular: Plant
+            summary: "{{fields.commonName}} ({{fields.containerSize}})"
+            fields:
+              - label: ID
+                name: id
+                widget: string
+              - label: Display Name
+                name: displayName
+                widget: string
+              - label: Common Name
+                name: commonName
+                widget: string
+              - label: Botanical Name
+                name: botanicalName
+                widget: string
+                required: false
+              - label: Container Size
+                name: containerSize
+                widget: string
+              - label: Base Price ($)
+                name: basePrice
+                widget: number
+                value_type: float
+                min: 0
+                step: 0.01
+              - label: Available Quantity
+                name: availability
+                widget: number
+                value_type: int
+                default: 0
+                min: 0
+              - label: Image (Upload or Path)
+                name: image
+                widget: image
+                required: false
+                allow_multiple: false
+
