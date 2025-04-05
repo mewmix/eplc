@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { X, Truck, Shovel, Package, Mail, Phone, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -46,67 +45,85 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
     zip: "",
     notes: "",
   })
-
   const [uploadedImages, setUploadedImages] = useState<File[]>([])
   const [needsIrrigation, setNeedsIrrigation] = useState<boolean | null>(null)
   const [irrigationType, setIrrigationType] = useState<string>("none")
   const [needsFertilizer, setNeedsFertilizer] = useState<boolean | null>(null)
   const [projectTimeline, setProjectTimeline] = useState<string>("flexible")
 
-  // Calculate subtotal for plants only
+  // Calculate costs
   const plantSubtotal = cart.reduce((total, item) => {
     const plant = plantsData.find((p) => p.id === item.id)
     return total + (plant ? plant.retailPrice * item.quantity : 0)
   }, 0)
-
-  // Calculate premium soil cost
   const soilCost = soilBags * 20
-
-  // Calculate planting service cost (1.5x the plant price)
   const plantingCost = includePlanting ? plantSubtotal * 1.5 : 0
-
-  // Calculate delivery cost based on zone and size
-  const getDeliveryCost = () => {
-    return baseCosts[deliveryZone][deliverySize]
-  }
-
+  const getDeliveryCost = () => baseCosts[deliveryZone][deliverySize]
   const deliveryCost = getDeliveryCost()
-
-  // Calculate total
   const total = plantSubtotal + soilCost + plantingCost + deliveryCost
 
-  // Determine delivery size based on cart contents
   useEffect(() => {
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0)
-
-    if (totalItems <= 3) {
-      setDeliverySize("small")
-    } else if (totalItems <= 10) {
-      setDeliverySize("medium")
-    } else {
-      setDeliverySize("large")
-    }
+    if (totalItems <= 3) setDeliverySize("small")
+    else if (totalItems <= 10) setDeliverySize("medium")
+    else setDeliverySize("large")
   }, [cart])
 
-  // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setOrderStatus("submitting")
-
-    // Simulate sending an email with order details
-    setTimeout(() => {
-      setOrderStatus("success")
-      // In a real application, you would send the order details to your server here
-    }, 1500)
-  }
-
-  // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setContactInfo((prev) => ({ ...prev, [name]: value }))
   }
 
-  // Render different content based on order status
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setOrderStatus("submitting")
+
+    const orderData = {
+      name: contactInfo.name,
+      email: contactInfo.email,
+      phone: contactInfo.phone,
+      address: `${contactInfo.address}, ${contactInfo.city}, ${contactInfo.state} ${contactInfo.zip}`,
+      notes: contactInfo.notes,
+      cart: cart.map(item => {
+        const plant = plantsData.find(p => p.id === item.id)
+        return { name: plant?.commonName, quantity: item.quantity, price: plant?.retailPrice }
+      }),
+      soilBags,
+      includePlanting,
+      deliveryZone,
+      deliverySize,
+      contactPreference,
+      needsIrrigation: needsIrrigation === null ? "unsure" : needsIrrigation,
+      irrigationType,
+      needsFertilizer: needsFertilizer === null ? "unsure" : needsFertilizer,
+      projectTimeline,
+      plantSubtotal: plantSubtotal.toFixed(2),
+      soilCost: soilCost.toFixed(2),
+      plantingCost: plantingCost.toFixed(2),
+      deliveryCost: deliveryCost.toFixed(2),
+      total: total.toFixed(2),
+      // We'll handle images separately if needed
+    }
+
+    try {
+      const response = await fetch("/api/submit-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      })
+
+      if (response.ok) {
+        setOrderStatus("success")
+      } else {
+        throw new Error(`Submission failed: ${response.status} ${response.statusText}`)
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error)
+      setOrderStatus("form")
+      alert("Failed to submit order. Please try again.")
+    }
+  }
+
   const renderContent = () => {
     switch (orderStatus) {
       case "submitting":
@@ -120,15 +137,13 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
             <p className="mt-6 text-center text-gray-600">Submitting your order request...</p>
           </div>
         )
-
       case "success":
         return <SuccessView onClose={onCheckoutComplete} contactPreference={contactPreference} />
-
       default:
         return (
           <form onSubmit={handleSubmit}>
+            {/* Keep your existing form content unchanged */}
             <div className="grid md:grid-cols-2 gap-6">
-              {/* Cart Summary */}
               <div>
                 <h3 className="text-lg font-semibold mb-4">Your Plants</h3>
                 <div className="space-y-4 mb-6">
@@ -148,10 +163,7 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                     )
                   })}
                 </div>
-
                 <Separator className="my-6" />
-
-                {/* Premium Soil Option */}
                 <div className="mb-6">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
@@ -179,8 +191,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                     </Select>
                   </div>
                 </div>
-
-                {/* Planting Service */}
                 <div className="mb-6">
                   <div className="flex items-center gap-3 mb-2">
                     <Checkbox
@@ -200,8 +210,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                     <p className="text-sm font-medium">Price: 1.5× plant cost (${plantingCost.toFixed(2)})</p>
                   </div>
                 </div>
-
-                {/* Delivery Options */}
                 <div className="mb-6">
                   <div className="flex items-center gap-2 mb-3">
                     <Truck className="h-5 w-5 text-green-700" />
@@ -246,8 +254,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                     {deliverySize === "small" ? "1-3 items" : deliverySize === "medium" ? "4-10 items" : "11+ items"})
                   </p>
                 </div>
-
-                {/* Order Summary */}
                 <div className="rounded-lg bg-gray-50 p-4">
                   <h3 className="font-semibold mb-3">Order Summary</h3>
                   <div className="space-y-2 text-sm">
@@ -255,30 +261,25 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                       <span>Plants Subtotal:</span>
                       <span>${plantSubtotal.toFixed(2)}</span>
                     </div>
-
                     {soilBags > 0 && (
                       <div className="flex justify-between">
                         <span>Premium Soil ({soilBags} bags):</span>
                         <span>${soilCost.toFixed(2)}</span>
                       </div>
                     )}
-
                     {includePlanting && (
                       <div className="flex justify-between">
                         <span>Planting Service:</span>
                         <span>${plantingCost.toFixed(2)}</span>
                       </div>
                     )}
-
                     <div className="flex justify-between">
                       <span>
                         Delivery ({deliveryZone}, {deliverySize}):
                       </span>
                       <span>${deliveryCost.toFixed(2)}</span>
                     </div>
-
                     <Separator className="my-2" />
-
                     <div className="flex justify-between font-semibold text-base">
                       <span>Estimated Total:</span>
                       <span>${total.toFixed(2)}</span>
@@ -286,8 +287,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                   </div>
                 </div>
               </div>
-
-              {/* Contact Information */}
               <div>
                 <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
                   <div className="flex">
@@ -308,16 +307,13 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                     </div>
                   </div>
                 </div>
-
                 <h3 className="text-lg font-semibold mb-4">Your Information</h3>
                 <div className="space-y-6 mb-6">
-                  {/* Basic Contact Info */}
                   <div className="space-y-4">
                     <div className="grid gap-2">
                       <Label htmlFor="name">Full Name</Label>
                       <Input id="name" name="name" value={contactInfo.name} onChange={handleInputChange} required />
                     </div>
-
                     <div className="grid gap-2">
                       <Label htmlFor="email">Email</Label>
                       <Input
@@ -329,7 +325,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                         required
                       />
                     </div>
-
                     <div className="grid gap-2">
                       <Label htmlFor="phone">Phone</Label>
                       <Input
@@ -342,8 +337,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                       />
                     </div>
                   </div>
-
-                  {/* Address Information */}
                   <div className="space-y-4">
                     <h4 className="font-medium text-gray-700">Delivery Address</h4>
                     <div className="grid gap-2">
@@ -356,7 +349,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                         required
                       />
                     </div>
-
                     <div className="grid grid-cols-2 gap-4">
                       <div className="grid gap-2">
                         <Label htmlFor="city">City</Label>
@@ -380,14 +372,11 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                       </div>
                     </div>
                   </div>
-
-                  {/* Irrigation Needs */}
                   <div className="space-y-4">
                     <h4 className="font-medium text-gray-700 flex items-center">
                       <CloudRain className="h-4 w-4 mr-2 text-green-700" />
                       Irrigation Needs
                     </h4>
-
                     <div className="grid gap-3">
                       <Label className="text-sm text-gray-600">Do you need irrigation installed?</Label>
                       <RadioGroup
@@ -409,7 +398,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                         </div>
                       </RadioGroup>
                     </div>
-
                     {needsIrrigation && (
                       <div className="grid gap-2">
                         <Label htmlFor="irrigation-type">Irrigation Type</Label>
@@ -427,14 +415,11 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                       </div>
                     )}
                   </div>
-
-                  {/* Fertilizer Needs */}
                   <div className="space-y-4">
                     <h4 className="font-medium text-gray-700 flex items-center">
                       <Sprout className="h-4 w-4 mr-2 text-green-700" />
                       Fertilizer & Amendments
                     </h4>
-
                     <div className="grid gap-3">
                       <Label className="text-sm text-gray-600">Would you like us to provide fertilizer?</Label>
                       <RadioGroup
@@ -457,8 +442,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                       </RadioGroup>
                     </div>
                   </div>
-
-                  {/* Project Timeline */}
                   <div className="space-y-4">
                     <h4 className="font-medium text-gray-700">Project Timeline</h4>
                     <div className="grid gap-2">
@@ -476,9 +459,8 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                       </Select>
                     </div>
                   </div>
-
-                  {/* Photo Upload */}
-                  <div className="space-y-4">
+                  {/* Uncomment if you want to handle images later */}
+                  {/* <div className="space-y-4">
                     <h4 className="font-medium text-gray-700 flex items-center">
                       <Droplet className="h-4 w-4 mr-2 text-green-700" />
                       Upload Photos of Your Planting Area
@@ -487,9 +469,7 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                       Photos help us better understand your space and provide more accurate recommendations.
                     </p>
                     <ImageUpload onFileUpload={(file) => setUploadedImages((prev) => [...prev, file])} maxFiles={3} />
-                  </div>
-
-                  {/* Special Instructions */}
+                  </div> */}
                   <div className="grid gap-2">
                     <Label htmlFor="notes">Special Instructions or Questions</Label>
                     <Textarea
@@ -501,7 +481,6 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                       className="min-h-[100px]"
                     />
                   </div>
-
                   <div className="grid gap-2">
                     <Label>Preferred Contact Method</Label>
                     <RadioGroup
@@ -534,11 +513,9 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
                     </RadioGroup>
                   </div>
                 </div>
-
                 <Button type="submit" className="w-full mt-6 bg-green-700 hover:bg-green-800">
                   Submit Order Request
                 </Button>
-
                 <p className="text-xs text-gray-500 mt-4 text-center">
                   By submitting this request, you agree to be contacted regarding your plant order.
                 </p>
@@ -565,10 +542,8 @@ export function CheckoutModal({ cart, onClose, onCheckoutComplete }: CheckoutMod
             </CardDescription>
           )}
         </CardHeader>
-
         <CardContent>{renderContent()}</CardContent>
       </Card>
     </div>
   )
 }
-
