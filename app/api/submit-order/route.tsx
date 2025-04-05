@@ -177,8 +177,8 @@ export async function POST(request: NextRequest) {
     console.log("Attempting to send email...");
     const mailInfo = await transporter.sendMail({
       from: `"EPLC Order System" <${process.env.EMAIL_USER}>`, // Use a sender name
-      to: 'alexanderjamesklein@gmail.com', // Primary recipient
-      // cc: orderData.email, // Optional: Send a copy to the customer
+      to: 'earthpeoplelandcare@gmail.com', // Primary recipient
+      cc: orderData.email, // Optional: Send a copy to the customer
       subject: `New Plant Order Request - ${orderData.name || 'Unknown Customer'}`,
       html: htmlEmail,
     });
