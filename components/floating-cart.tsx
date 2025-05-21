@@ -3,11 +3,18 @@
 import { useEffect, useState } from "react"
 import { ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { plantsData } from "@/data/plants"
+// Removed: import { plantsData } from "@/data/plants"
+
+interface CartItem {
+  id: string;
+  quantity: number;
+  retailPrice: number;
+  // Add any other fields if they are used by FloatingCart, otherwise keep it minimal
+}
 
 interface FloatingCartProps {
-  cart: { id: string; quantity: number }[]
-  onCartOpen: () => void
+  cart: CartItem[];
+  onCartOpen: () => void;
 }
 
 export function FloatingCart({ cart, onCartOpen }: FloatingCartProps) {
@@ -16,9 +23,8 @@ export function FloatingCart({ cart, onCartOpen }: FloatingCartProps) {
 
   const cartItemCount = cart.reduce((count, item) => count + item.quantity, 0)
   const cartTotal = cart.reduce((total, item) => {
-    const plant = plantsData.find((p) => p.id === item.id)
-    return total + (plant ? plant.retailPrice * item.quantity : 0)
-  }, 0)
+    return total + (item.retailPrice * item.quantity);
+  }, 0);
 
   useEffect(() => {
     const handleScroll = () => {
