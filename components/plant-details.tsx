@@ -1,24 +1,78 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react" // Added useEffect
 import Image from "next/image"
 import { X, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { plantsData } from "@/data/plants"
+// Removed: import { plantsData } from "@/data/plants"
+
+// Define a Plant interface (can be moved to a shared types file)
+interface Plant {
+  id: string;
+  botanicalName: string;
+  commonName: string;
+  displayName: string;
+  containerSize: string;
+  basePrice: number;
+  retailPrice: number; // Will be calculated client-side
+  availability: string;
+  image?: string;
+  // Add other fields if present in your data/plant-data.json
+}
 
 interface PlantDetailsProps {
   plantId: string
   onClose: () => void
-  onAddToCart: () => void
+  onAddToCart: (plant: Plant) => void // Pass the plant to add to cart
 }
 
 export function PlantDetails({ plantId, onClose, onAddToCart }: PlantDetailsProps) {
-  const plant = plantsData.find((p) => p.id === plantId)
+  const [plant, setPlant] = useState<Plant | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<"description" | "care">("description")
 
-  if (!plant) return null
+  useEffect(() => {
+    if (!plantId) {
+      setError("No plant ID provided.")
+      setLoading(false)
+      return
+    }
 
-  // Sample descriptions and care instructions (in a real app, these would come from the database)
+    const fetchPlantDetails = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const response = await fetch("/api/products")
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        const allPlants: Plant[] = await response.json()
+        const foundPlant = allPlants.find((p) => p.id === plantId)
+
+        if (foundPlant) {
+          // Calculate retailPrice client-side
+          const plantWithRetailPrice = {
+            ...foundPlant,
+            retailPrice: parseFloat((foundPlant.basePrice * 1.75).toFixed(2)),
+          };
+          setPlant(plantWithRetailPrice)
+        } else {
+          setError(`Plant with ID ${plantId} not found.`)
+        }
+      } catch (e: any) {
+        console.error("Failed to fetch plant details:", e)
+        setError(e.message || "Failed to load plant details. Please try again.")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPlantDetails()
+  }, [plantId])
+
+  // Hardcoded descriptions and care instructions (as per original component)
+  // In a real app, these might come from the API or be part of the Plant object
   const descriptions: Record<string, string> = {
     default:
       "This beautiful plant will make a wonderful addition to your garden, providing delicious fruits and adding beauty to your landscape.",
@@ -46,7 +100,39 @@ export function PlantDetails({ plantId, onClose, onAddToCart }: PlantDetailsProp
   }
 
   const description = descriptions[plant.commonName] || descriptions.default
-  const care = careInstructions[plant.commonName] || careInstructions.default
+  const description = plant ? descriptions[plant.commonName] || descriptions.default : ""
+  const care = plant ? careInstructions[plant.commonName] || careInstructions.default : ""
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-lg p-8">Loading plant details...</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-lg p-8">
+          <p className="text-red-500 mb-4">Error: {error}</p>
+          <Button onClick={onClose}>Close</Button>
+        </div>
+      </div>
+    )
+  }
+
+  if (!plant) {
+    // This case should ideally be covered by error state, but as a fallback:
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-lg p-8">
+            <p className="text-red-500 mb-4">Plant not found.</p>
+            <Button onClick={onClose}>Close</Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -83,7 +169,7 @@ export function PlantDetails({ plantId, onClose, onAddToCart }: PlantDetailsProp
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Available</p>
-                  <p className="text-lg">{plant.available}</p>
+                  <p className="text-lg">{plant.availability}</p> {/* Changed from plant.available */}
                 </div>
               </div>
 
@@ -109,7 +195,7 @@ export function PlantDetails({ plantId, onClose, onAddToCart }: PlantDetailsProp
               <Button
                 className="w-full bg-green-700 hover:bg-green-800"
                 onClick={() => {
-                  onAddToCart()
+                  onAddToCart(plant) // Pass the fetched plant object
                   onClose()
                 }}
               >
